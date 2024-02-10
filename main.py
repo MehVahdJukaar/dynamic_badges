@@ -40,6 +40,7 @@ badges = [
 
 def download_and_read_image(url):
     try:
+
         # Send a GET request to download the image
         response = requests.get(url)
         response.raise_for_status()  # Raise an exception for bad status codes
