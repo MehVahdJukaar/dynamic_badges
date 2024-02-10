@@ -5,15 +5,35 @@ import pytesseract
 from wand.image import Image as WandImage
 import os
 from github import Github
+from svgpathtools import svg2paths
 
 github_password = os.environ.get('GITHUB_TOKEN')
 github_user = "MehVahdJukaar"
 repository_name = "dynamic_badges"
-# Discord badge URL
-discord_badge_url = "https://img.shields.io/discord/790151253144895508?label=&color=2d2d2d&labelColor=dddddd&style=for-the-badge&logo=Discord&format=png"
-discord_background = "discord_template.svg"
-# Coordinates for cropping the image (adjust as needed)
-crop_box = (140, 0, 360, 120)  # (left, top, right, bottom)
+
+
+class Badge:
+    def __init__(self, url, name, crop_box, old_text, new_text):
+        self.url = url
+        self.name = name
+        self.crop_box = crop_box
+        self.old_text = old_text
+        self.new_text = new_text
+
+    def background(self):
+        return self.name + "_template.svg"
+
+    def target(self):
+        return self.name + "svg"
+
+
+# url, name, crop box
+badges = [
+    Badge(
+        "https://img.shields.io/discord/790151253144895508?label=&color=2d2d2d&labelColor=dddddd&style=for-the-badge&logo=Discord",
+        "discord", (140, 0, 360, 120), "Online 1000", "Online {}")
+
+]
 
 
 def download_and_read_image(url):
@@ -25,6 +45,8 @@ def download_and_read_image(url):
         # Read the image data
         image_data = response.content
 
+
+
         # Convert SVG to PNG using Wand
         # Convert SVG to PNG using Wand
         with WandImage(blob=image_data, format="svg", height=120, width=600) as img:  # Specify desired width and height
@@ -34,13 +56,17 @@ def download_and_read_image(url):
         # Open the PNG image using PIL
         image = Image.open(BytesIO(png_data))
 
+        print("Image format:", image.format)
+        print("Image size:", image.size)
+        print("Image mode:", image.mode)
+
         return image
     except Exception as e:
         print("Error downloading/reading image:", e)
         return None
 
 
-def parse_number_from_image(image):
+def parse_number_from_image(image, crop_box):
     try:
 
         # Crop the image to the specified box
@@ -56,6 +82,20 @@ def parse_number_from_image(image):
     except Exception as e:
         print("Error parsing number from image:", e)
         return None
+
+
+def flatten_svg_text(svg_file):
+    # Parse SVG file and extract paths
+    paths, attributes = svg2paths(svg_file)
+
+    # Flatten text paths
+    for attr in attributes:
+        if 'text' in attr.keys():
+            text_path = attr['text'].get('path', None)
+            if text_path:
+                paths.extend(text_path)
+
+    return paths
 
 
 def replace_svg_text(target_image, old_string, new_string):
@@ -126,27 +166,23 @@ def create_new_image(number):
 
 
 if __name__ == "__main__":
-    # Download and read the Discord badge image
-    discord_badge_image = download_and_read_image(discord_badge_url)
 
-    if discord_badge_image:
+    for badge in badges:
+        # Download and read the Discord badge image
+        discord_badge_image = download_and_read_image(badge.url)
 
-        # Display some information about the image
-        print("Image format:", discord_badge_image.format)
-        print("Image size:", discord_badge_image.size)
-        print("Image mode:", discord_badge_image.mode)
+        if discord_badge_image:
 
-        # Parse the number from the image
-        parsed_number = parse_number_from_image(discord_badge_image)
+            parsed_number = parse_number_from_image(discord_badge_image, badge.crop_box)
 
-        if parsed_number is not None:
-            print("Parsed number:", parsed_number)
+            if parsed_number is not None:
+                print("Parsed number:", parsed_number)
 
-            new_svg = replace_svg_text(discord_background, "Online 1000", "Online " + str(parsed_number))
+                new_svg = replace_svg_text(badge.background(), badge.old_text, badge.new_text.format(parsed_number))
 
-            push_to_git(new_svg, "discord.svg")
+                push_to_git(new_svg, "discord2.svg")
 
+            else:
+                print("Failed to parse number from the image.")
         else:
-            print("Failed to parse number from the image.")
-    else:
-        print("Failed to download/read the image.")
+            print("Failed to download/read the image.")
