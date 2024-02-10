@@ -5,7 +5,7 @@ import pytesseract
 from wand.image import Image as WandImage
 # Discord badge URL
 discord_badge_url = "https://img.shields.io/discord/790151253144895508?label=&color=2d2d2d&labelColor=dddddd&style=for-the-badge&logo=Discord&format=png"
-
+discord_background = "newdiscord.svg"
 # Coordinates for cropping the image (adjust as needed)
 crop_box = (140, 0, 360, 120)  # (left, top, right, bottom)
 
@@ -51,6 +51,22 @@ def parse_number_from_image(image):
         print("Error parsing number from image:", e)
         return None
 
+def replace_svg_text(target_image, old_string, new_string):
+    try:
+        # Open the SVG file
+        with open(target_image, 'r') as file:
+            svg_content = file.read()
+
+        # Replace the old string with the new one
+        modified_svg_content = svg_content.replace(old_string, new_string)
+
+        return modified_svg_content
+
+    except FileNotFoundError:
+        print("Input SVG file not found.")
+    except Exception as e:
+        print("An error occurred:", e)
+
 def create_new_image(number):
     # Load the background image
     background_image = Image.open("background_image.png")  # Replace "background_image.jpg" with your image path
@@ -95,7 +111,11 @@ if __name__ == "__main__":
         if parsed_number is not None:
             print("Parsed number:", parsed_number)
 
-            create_new_image(parsed_number)
+            new_svg = replace_svg_text(discord_background, "Online 1000", "Online "+str(parsed_number))
+
+            # Write the modified SVG content to the output file
+            with open("output_test.svg", 'w') as file:
+                file.write(new_svg)
         else:
             print("Failed to parse number from the image.")
     else:
