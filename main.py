@@ -1,13 +1,15 @@
+import os
 import threading
 import time
 
-import requests
-from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
+import pygithub
+
 import pytesseract
+import requests
+
+from PIL import Image, ImageDraw, ImageFont
 from wand.image import Image as WandImage
-import os
-from github import Github
 
 github_password = os.environ.get('GITHUB_TOKEN')
 github_user = "MehVahdJukaar"
@@ -111,7 +113,7 @@ def replace_svg_text(target_image, old_string, new_string):
 def push_to_git(file_content, file_path):
     try:
         # Create a PyGithub instance using the token
-        g = Github(github_user, github_password)
+        g = pygithub.Github(github_user, github_password)
 
         # Get the specified repository
         repo = g.get_user().get_repo(repository_name)
@@ -190,10 +192,11 @@ def update_add_badges():
 
 
 if __name__ == "__main__":
-    while True:
-        interval_hours = 1
-        # Run the function
-        threading.Thread(target=update_add_badges).start()
-        # Wait for the specified interval
-        print("Sleeping")
-        time.sleep(interval_hours * 3600)
+  
+  while True:
+      interval_hours = 1
+      # Run the function
+      threading.Thread(target=update_add_badges).start()
+      # Wait for the specified interval
+      print("Sleeping")
+      time.sleep(interval_hours * 3600)

@@ -1,0 +1,29 @@
+name: Publish to PyPI
+on:
+  push:
+    tags: ["*"]  # this will run full workflow including publish to PyPI
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: "./.pygithub/workflows/_build-pkg.yml"
+    with:
+      artifact-name: package
+
+  publish:
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: package
+          path: dist
+      - name: Install twine
+        run: pip install -q twine
+      - name: Publish 📦 to PyPI
+        # only run this for tags
+        if: startsWith(pygithub.event.ref, 'refs/tags/')
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: twine upload dist/*
