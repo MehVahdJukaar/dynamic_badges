@@ -186,6 +186,8 @@ def update_add_badges():
         else:
             print("Failed to download/read the image.")
 
+    print("New thread over and out o7")
+
 
 if __name__ == "__main__":
     while True:
