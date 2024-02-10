@@ -1,3 +1,6 @@
+import threading
+import time
+
 import requests
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
@@ -30,10 +33,14 @@ class Badge:
 badges = [
     Badge(
         "https://img.shields.io/discord/790151253144895508?label=&color=2d2d2d&labelColor=dddddd&style=for-the-badge&logo=Discord",
-        "discord", (140, 0, 340, 120), "Online 1000", "Online {}"),
+        "discord", (140, 0, 340, 120), "Online 1000", "{} Online"),
     Badge(
         "https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dmehvahdjukaar%26type%3Dpatrons&style=for-the-badge&label=&color=2d2d2d&labelColor=dddddd&",
-        "patreon", (140, 0, 290, 120), "Supporters 20", "Supporters {}"
+        "patreon", (140, 0, 290, 120), "Supporters 20", "{} Supporters"
+    ),
+    Badge(
+        "https://img.shields.io/youtube/channel/subscribers/UCOaLLgwzOdbH6rCI7izCptw?label=&color=2d2d2d&labelColor=dddddd&style=for-the-badge&logo=Youtube&message=Twitter&logoColor=ff0000",
+        "youtube", (140, 0, 380, 120), "Subscribers 1000", "{} Subscribers"
     )
 ]
 
@@ -47,8 +54,6 @@ def download_and_read_image(url):
 
         # Read the image data
         image_data = response.content
-
-
 
         # Convert SVG to PNG using Wand
         # Convert SVG to PNG using Wand
@@ -73,7 +78,7 @@ def parse_number_from_image(image, crop_box):
     try:
         # Crop the image to the specified box
         cropped_image = image.crop(crop_box)
-        #cropped_image.show()
+        # cropped_image.show()
         # Perform OCR on the cropped image
         parsed_text = pytesseract.image_to_string(cropped_image)
 
@@ -153,7 +158,13 @@ def create_new_image(number):
     background_image.show()  # Replace "output_image.jpg" with your desired output file path
 
 
-if __name__ == "__main__":
+def save(target_image):
+    with open("temp.svg", 'w') as file:
+        file.write(target_image)
+
+
+def update_add_badges():
+    print("Hello from new thread")
 
     for badge in badges:
         # Download and read the Discord badge image
@@ -174,3 +185,13 @@ if __name__ == "__main__":
                 print("Failed to parse number from the image.")
         else:
             print("Failed to download/read the image.")
+
+
+if __name__ == "__main__":
+    while True:
+        interval_hours = 1
+        # Run the function
+        threading.Thread(target=update_add_badges).start()
+        # Wait for the specified interval
+        print("Sleeping")
+        time.sleep(interval_hours * 3600)
