@@ -5,7 +5,6 @@ import pytesseract
 from wand.image import Image as WandImage
 import os
 from github import Github
-from svgpathtools import svg2paths
 
 github_password = os.environ.get('GITHUB_TOKEN')
 github_user = "MehVahdJukaar"
@@ -24,15 +23,18 @@ class Badge:
         return self.name + "_template.svg"
 
     def target(self):
-        return self.name + "svg"
+        return self.name + ".svg"
 
 
 # url, name, crop box
 badges = [
     Badge(
         "https://img.shields.io/discord/790151253144895508?label=&color=2d2d2d&labelColor=dddddd&style=for-the-badge&logo=Discord",
-        "discord", (140, 0, 360, 120), "Online 1000", "Online {}")
-
+        "discord", (140, 0, 340, 120), "Online 1000", "Online {}"),
+    Badge(
+        "https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dmehvahdjukaar%26type%3Dpatrons&style=for-the-badge&label=&color=2d2d2d&labelColor=dddddd&",
+        "patreon", (140, 0, 290, 120), "Supporters 20", "Supporters {}"
+    )
 ]
 
 
@@ -68,10 +70,9 @@ def download_and_read_image(url):
 
 def parse_number_from_image(image, crop_box):
     try:
-
         # Crop the image to the specified box
         cropped_image = image.crop(crop_box)
-
+        #cropped_image.show()
         # Perform OCR on the cropped image
         parsed_text = pytesseract.image_to_string(cropped_image)
 
@@ -82,20 +83,6 @@ def parse_number_from_image(image, crop_box):
     except Exception as e:
         print("Error parsing number from image:", e)
         return None
-
-
-def flatten_svg_text(svg_file):
-    # Parse SVG file and extract paths
-    paths, attributes = svg2paths(svg_file)
-
-    # Flatten text paths
-    for attr in attributes:
-        if 'text' in attr.keys():
-            text_path = attr['text'].get('path', None)
-            if text_path:
-                paths.extend(text_path)
-
-    return paths
 
 
 def replace_svg_text(target_image, old_string, new_string):
@@ -180,7 +167,7 @@ if __name__ == "__main__":
 
                 new_svg = replace_svg_text(badge.background(), badge.old_text, badge.new_text.format(parsed_number))
 
-                push_to_git(new_svg, "discord2.svg")
+                push_to_git(new_svg, badge.target())
 
             else:
                 print("Failed to parse number from the image.")
