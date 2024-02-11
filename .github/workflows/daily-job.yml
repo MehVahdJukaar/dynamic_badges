@@ -4,19 +4,7 @@ on:
   schedule:
     - cron: '0 */1 * * *' # Run every 1 hours
 
-  workflow_dispatch:
-
-
-
-
 jobs:
-
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - run: echo "Hi from github actions!"
-
   run-main-script:
     runs-on: ubuntu-latest
 
@@ -29,11 +17,18 @@ jobs:
       with:
         python-version: '3.x' # Specify the version of Python you need
 
+    - name: Install Tesseract
+      run: |
+        sudo apt-get update
+        sudo apt-get install tesseract-ocr -y
+
     - name: Install dependencies
       run: |
-        pip install -r requirements.txt # Install dependencies from requirements.txt
-        # Or you can install individual dependencies like:
-        # pip install package1 package2 package3
+        pip install -r requirements.txt
+
+    - name: Set up Tesseract PATH
+      run: |
+        echo "/usr/bin/tesseract" >> $GITHUB_PATH
 
     - name: Run Python Script
       run: python main.py
