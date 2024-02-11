@@ -100,6 +100,7 @@ def parse_number_from_image(image, crop_box):
         result = reader.readtext(image_bytes)
         # Extract numbers from OCR result
         filtered = ""
+        print()
         for detection in result:
             text = detection[1]
             if isinstance(text, str):
@@ -109,7 +110,7 @@ def parse_number_from_image(image, crop_box):
                 print("Text is not a string:", text)
 
         if filtered == "":
-            print("Error parsing number from image. Got <"+result+">")
+            print("Error parsing number from image")
             return None
 
         return filtered
