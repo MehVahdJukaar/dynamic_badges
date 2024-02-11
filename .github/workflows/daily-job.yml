@@ -1,8 +1,8 @@
-name: Run Main Script Every 2 Hours
+name: Run Main Script Every 1 Hours
 
 on:
   schedule:
-    - cron: '0 */2 * * *' # Run every 2 hours
+    - cron: '0 */2 * * *' # Run every 1 hours
 
   workflow_dispatch:
 
@@ -17,13 +17,25 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x' # Specify the version of Python you need
+        python-version: '3.9' # Specify the version of Python you need
+
+    - name: Install Tesseract
+      run: |
+        sudo apt-get update
+        sudo apt-get install tesseract-ocr -y
 
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
 
+    - name: Set up Tesseract PATH
+      run: |
+        echo "/usr/bin/tesseract" >> $GITHUB_PATH
+
     - name: Run Python Script
       env:
         GITHUB_TOKEN: ${{ secrets.TOK }}
-      run: python main.py
+      run: python main.py > output.txt 2>&1
+
+    - name: Print Output
+      run: cat output.txt
