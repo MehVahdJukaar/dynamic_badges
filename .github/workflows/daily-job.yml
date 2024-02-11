@@ -28,6 +28,9 @@ jobs:
       run: |
         python -c "import pytesseract; print('Tesseract executable path:', pytesseract.pytesseract.tesseract_cmd)"
 
+    - name: Check Tesseract Version
+      run: tesseract --version
+
     - name: Install dependencies
       run: |
         pip install -r requirements.txt

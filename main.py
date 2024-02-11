@@ -6,6 +6,7 @@ from io import BytesIO
 from github import Github
 
 import pytesseract
+import shutil
 import requests
 
 from PIL import Image, ImageDraw, ImageFont
@@ -176,11 +177,13 @@ def update_add_badges():
 
     # List of available languages
     print(pytesseract.get_languages(config=''))
-    tesseract_path = pytesseract.pytesseract.tesseract_cmd
-    if os.path.exists(tesseract_path):
-        print("Tesseract executable found at:", tesseract_path)
+    tesseract_executable = shutil.which("tesseract")
+
+    if tesseract_executable is not None:
+        print("Tesseract executable found at:", tesseract_executable)
     else:
-        print("Tesseract executable not found or path is incorrect:", tesseract_path)
+        print("Tesseract executable not found or not in PATH.")
+
     for badge in badges:
         # Download and read the Discord badge image
         discord_badge_image = download_and_read_image(badge.url, badge.name)
