@@ -1,8 +1,8 @@
-name: Run Main Script Every 1 Hours
+name: Run Main Script Every 5 Hours
 
 on:
   schedule:
-    - cron: '0 */2 * * *' # Run every 1 hours
+    - cron: '0 */12 * * *' # Run every 5 hours
 
   workflow_dispatch:
 
