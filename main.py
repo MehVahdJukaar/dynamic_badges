@@ -3,6 +3,9 @@ import threading
 import time
 
 from io import BytesIO
+
+import cv2
+import numpy as np
 from github import Github
 
 import pytesseract
@@ -85,7 +88,15 @@ def parse_number_from_image(image, crop_box):
         cropped_image = image.crop(crop_box)
         # cropped_image.show()
         # Perform OCR on the cropped image
-        parsed_text = pytesseract.image_to_string(cropped_image, config='--psm 6', lang='eng')
+        # Grayscale image
+        img = cropped_image.convert('L')
+        ret, img = cv2.threshold(np.array(img), 125, 255, cv2.THRESH_BINARY)
+
+        # Older versions of pytesseract need a pillow image
+        # Convert back if needed
+        img = Image.fromarray(img.astype(np.uint8))
+
+        parsed_text = pytesseract.image_to_string(img, config='--psm 6 -c tessedit_char_whitelist=0123456789.mk', lang='eng')
         # Remove non-numeric characters and convert to integer
 
         filtered = ''.join([char for char in parsed_text if char.isdigit() or char.lower() in ('k', 'm')])

@@ -3,3 +3,5 @@ requests
 Pillow
 Wand
 pygithub
+numpy
+cv2

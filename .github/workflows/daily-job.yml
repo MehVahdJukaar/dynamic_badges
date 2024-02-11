@@ -24,10 +24,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install tesseract-ocr -y
         pip install pytesseract
-    - name: Run OCR
-      run: |
-        chmod +x /usr/bin/tesseract
-        chmod +x tesseract
 
     - name: Check Tesseract Version
       run: tesseract --version
