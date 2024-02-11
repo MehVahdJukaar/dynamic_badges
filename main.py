@@ -82,10 +82,10 @@ def download_and_read_image(url, name):
 def parse_number_from_image(image, crop_box):
     try:
         # Crop the image to the specified box
-        cropped_image = image #.crop(crop_box)
+        cropped_image = image.crop(crop_box)
         # cropped_image.show()
         # Perform OCR on the cropped image
-        parsed_text = pytesseract.image_to_string(cropped_image, config='--psm 1', lang='eng')
+        parsed_text = pytesseract.image_to_string(cropped_image, config='--psm 6', lang='eng')
         # Remove non-numeric characters and convert to integer
 
         filtered = ''.join([char for char in parsed_text if char.isdigit() or char.lower() in ('k', 'm')])
