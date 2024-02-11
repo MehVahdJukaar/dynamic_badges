@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: '0 */1 * * *' # Run every 1 hours
 
+  workflow_dispatch:
+
 jobs:
   run-main-script:
     runs-on: ubuntu-latest
@@ -17,14 +19,14 @@ jobs:
       with:
         python-version: '3.x' # Specify the version of Python you need
 
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
     - name: Install Tesseract
       run: |
         sudo apt-get update
         sudo apt-get install tesseract-ocr -y
-
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
 
     - name: Set up Tesseract PATH
       run: |
