@@ -23,6 +23,9 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install tesseract-ocr -y
+    - name: Run OCR
+      run: |
+        python -c "import pytesseract; print('Tesseract executable path:', pytesseract.pytesseract.tesseract_cmd)"
 
     - name: Install dependencies
       run: |
