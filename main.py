@@ -40,7 +40,7 @@ badges = [
     ),
     Badge(
         "https://img.shields.io/youtube/channel/subscribers/UCOaLLgwzOdbH6rCI7izCptw?label=&color=2d2d2d&labelColor=dddddd&style=for-the-badge&logo=Youtube&message=Twitter&logoColor=ff0000",
-        "youtube", (140, 0, 380, 120), "Subscribers 1000", "{} Subscribers"
+        "youtube", (140, 0, 310, 120), "Subscribers 1000", "{} Subscribers"
     )
 ]
 
@@ -81,11 +81,10 @@ def parse_number_from_image(image, crop_box):
         # cropped_image.show()
         # Perform OCR on the cropped image
         parsed_text = pytesseract.image_to_string(cropped_image)
-
         # Remove non-numeric characters and convert to integer
-        parsed_number = int(''.join(filter(str.isdigit, parsed_text)))
 
-        return parsed_number
+        # parsed_number = int(''.join(filter(str.isdigit, parsed_text)))
+        return parsed_text
     except Exception as e:
         print("Error parsing number from image:", e)
         return None
@@ -178,6 +177,8 @@ def update_add_badges():
                 print("Parsed number:", parsed_number)
 
                 new_svg = replace_svg_text(badge.background(), badge.old_text, badge.new_text.format(parsed_number))
+
+                save(new_svg)
 
                 push_to_git(new_svg, badge.target())
 
