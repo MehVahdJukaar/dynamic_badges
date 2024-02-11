@@ -102,8 +102,11 @@ def parse_number_from_image(image, crop_box):
         filtered = ""
         for detection in result:
             text = detection[1]
-            parsed_text = ''.join([char for char in text if char.isdigit() or char.lower() in ('k', 'm')])
-            filtered += parsed_text
+            if isinstance(text, str):
+                parsed_text = ''.join([char for char in text if char.isdigit() or char.lower() in ('k', 'm')])
+                filtered += parsed_text
+            else:
+                print("Text is not a string:", text)
 
         if filtered == "":
             print("Error parsing number from image. Got <"+result+">")
