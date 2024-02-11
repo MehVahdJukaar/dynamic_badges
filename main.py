@@ -47,7 +47,7 @@ badges = [
 ]
 
 
-def download_and_read_image(url):
+def download_and_read_image(url, name):
     try:
 
         # Send a GET request to download the image
@@ -56,6 +56,8 @@ def download_and_read_image(url):
 
         # Read the image data
         image_data = response.content
+
+        push_to_git(image_data, name+"_received.svg")
 
         # Convert SVG to PNG using Wand
         # Convert SVG to PNG using Wand
@@ -84,6 +86,8 @@ def parse_number_from_image(image, crop_box):
         # Perform OCR on the cropped image
         parsed_text = pytesseract.image_to_string(cropped_image)
         # Remove non-numeric characters and convert to integer
+
+        parsed_text = ''.join([char for char in parsed_text if char.isdigit() or char.lower() in ('k', 'm')])
 
         # parsed_number = int(''.join(filter(str.isdigit, parsed_text)))
         if parsed_text == "":
@@ -173,7 +177,7 @@ def update_add_badges():
 
     for badge in badges:
         # Download and read the Discord badge image
-        discord_badge_image = download_and_read_image(badge.url)
+        discord_badge_image = download_and_read_image(badge.url, badge.name)
 
         if discord_badge_image:
 
