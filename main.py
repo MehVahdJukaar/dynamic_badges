@@ -3,7 +3,7 @@ import threading
 import time
 
 from io import BytesIO
-import pygithub
+import github
 
 import pytesseract
 import requests
@@ -112,7 +112,7 @@ def replace_svg_text(target_image, old_string, new_string):
 def push_to_git(file_content, file_path):
     try:
         # Create a PyGithub instance using the token
-        g = pygithub.Github(github_user, github_password)
+        g = github.Github(github_user, github_password)
 
         # Get the specified repository
         repo = g.get_user().get_repo(repository_name)

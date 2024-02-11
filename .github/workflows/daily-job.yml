@@ -1,4 +1,4 @@
-name: Run Main Script Every 2 Hours
+name: Run Main Script Every 1 Hours
 
 on:
   schedule:
