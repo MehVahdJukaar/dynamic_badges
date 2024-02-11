@@ -1,0 +1,27 @@
+name: Run Main Script Every 2 Hours
+
+on:
+  schedule:
+    - cron: '0 */2 * * *' # Run every 2 hours
+
+jobs:
+  run-main-script:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x' # Specify the version of Python you need
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt # Install dependencies from requirements.txt
+        # Or you can install individual dependencies like:
+        # pip install package1 package2 package3
+
+    - name: Run Python Script
+      run: python main.py

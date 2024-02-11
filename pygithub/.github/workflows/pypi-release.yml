@@ -1,7 +1,7 @@
 name: Publish to PyPI
 on:
   push:
-    tags: ["*"]  # this will run full workflow including publish to PyPI
+    tags: ["*"]  # this will run full workflows including publish to PyPI
   workflow_dispatch:
 
 jobs:

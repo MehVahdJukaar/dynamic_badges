@@ -3311,7 +3311,7 @@ class Repository(CompletableGithubObject):
     def get_workflow(self, id_or_file_name: str | int) -> Workflow:
         """
         :calls: `GET /repos/{owner}/{repo}/actions/workflows/{workflow_id} <https://docs.github.com/en/rest/reference/actions#workflows>`_
-        :param id_or_file_name: int or string. Can be either a workflow ID or a filename.
+        :param id_or_file_name: int or string. Can be either a workflows ID or a filename.
 
         :rtype: :class:`github.Workflow.Workflow`
         """

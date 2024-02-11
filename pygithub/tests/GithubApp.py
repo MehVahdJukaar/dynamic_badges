@@ -40,7 +40,7 @@ class GithubApp(Framework.TestCase):
     def testGetPublicApp(self):
         app = self.g.get_app(slug=self.app_slug)
         self.assertEqual(app.created_at, datetime(2018, 7, 30, 9, 30, 17, tzinfo=timezone.utc))
-        self.assertEqual(app.description, "Automate your workflow from idea to production")
+        self.assertEqual(app.description, "Automate your workflows from idea to production")
         self.assertListEqual(
             app.events,
             [

@@ -44,7 +44,7 @@ class WorkflowRun(Framework.TestCase):
         )
         self.assertEqual(self.workflow_run.id, 3881497935)
         self.assertEqual(self.workflow_run.name, "CI")
-        self.assertEqual(self.workflow_run.head_branch, "feat/workflow-run")
+        self.assertEqual(self.workflow_run.head_branch, "feat/workflows-run")
         self.assertEqual(self.workflow_run.head_sha, "c6e5cac67a58a4eb11f1f28567a77a6e2cc8ee98")
         self.assertEqual(self.workflow_run.path, ".pygithub/workflows/ci.yml")
         self.assertEqual(self.workflow_run.display_title, "TEST PR")

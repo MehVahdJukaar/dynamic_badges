@@ -199,5 +199,8 @@ if __name__ == "__main__":
       # Run the function
       threading.Thread(target=update_add_badges).start()
       # Wait for the specified interval
+
+      break
+
       print("Sleeping")
       time.sleep(interval_hours * 3600)
