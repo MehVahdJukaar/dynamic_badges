@@ -3,7 +3,7 @@ requests~=2.31.0
 Pillow~=10.0.1
 Wand~=0.6.13
 pygithub~=2.2.0
-numpy~=1.22.4
+
 
 urllib3~=1.26.12
 PyJWT~=2.8.0
