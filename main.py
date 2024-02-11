@@ -87,14 +87,13 @@ def parse_number_from_image(image, crop_box):
         parsed_text = pytesseract.image_to_string(cropped_image)
         # Remove non-numeric characters and convert to integer
 
-        parsed_text = ''.join([char for char in parsed_text if char.isdigit() or char.lower() in ('k', 'm')])
+        filtered = ''.join([char for char in parsed_text if char.isdigit() or char.lower() in ('k', 'm')])
 
-        # parsed_number = int(''.join(filter(str.isdigit, parsed_text)))
-        if parsed_text == "":
-            print("Error parsing number from image. Got empty string")
+        if filtered == "":
+            print("Error parsing number from image. Got <"+parsed_text+">")
             return None
 
-        return parsed_text
+        return filtered
     except Exception as e:
         print("Error parsing number from image:", e)
         return None
