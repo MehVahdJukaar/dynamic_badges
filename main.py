@@ -3,7 +3,7 @@ import threading
 import time
 
 from io import BytesIO
-import github
+from github import Github
 
 import pytesseract
 import requests
@@ -86,6 +86,10 @@ def parse_number_from_image(image, crop_box):
         # Remove non-numeric characters and convert to integer
 
         # parsed_number = int(''.join(filter(str.isdigit, parsed_text)))
+        if parsed_text == "":
+            print("Error parsing number from image. Got empty string")
+            return None
+
         return parsed_text
     except Exception as e:
         print("Error parsing number from image:", e)
@@ -112,7 +116,7 @@ def replace_svg_text(target_image, old_string, new_string):
 def push_to_git(file_content, file_path):
     try:
         # Create a PyGithub instance using the token
-        g = github.Github(github_user, github_password)
+        g = Github(github_user, github_password)
 
         # Get the specified repository
         repo = g.get_user().get_repo(repository_name)
@@ -180,7 +184,7 @@ def update_add_badges():
 
                 new_svg = replace_svg_text(badge.background(), badge.old_text, badge.new_text.format(parsed_number))
 
-                save(new_svg)
+                # save(new_svg)
 
                 push_to_git(new_svg, badge.target())
 
