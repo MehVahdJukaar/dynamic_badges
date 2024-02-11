@@ -1,4 +1,5 @@
 pytesseract
+easyocr
 requests
 Pillow
 Wand

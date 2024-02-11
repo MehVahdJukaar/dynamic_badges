@@ -5,8 +5,13 @@ import time
 from io import BytesIO
 from github import Github
 
-import pytesseract
+#import pytesseract
 import requests
+import easyocr
+
+# Initialize EasyOCR reader
+reader = easyocr.Reader(['en'])  # Specify languages (e.g., English)
+
 
 from PIL import Image, ImageDraw, ImageFont
 from wand.image import Image as WandImage
@@ -82,15 +87,26 @@ def parse_number_from_image(image, crop_box):
     try:
         # Crop the image to the specified box
         cropped_image = image.crop(crop_box)
-        # cropped_image.show()
-        # Perform OCR on the cropped image
-        parsed_text = pytesseract.image_to_string(cropped_image)
-        # Remove non-numeric characters and convert to integer
 
-        filtered = ''.join([char for char in parsed_text if char.isdigit() or char.lower() in ('k', 'm')])
+        #parsed_text = pytesseract.image_to_string(cropped_image)
+        #filtered = ''.join([char for char in parsed_text if char.isdigit() or char.lower() in ('k', 'm')])
+
+        # Convert PIL Image to bytes
+        with BytesIO() as output:
+            cropped_image.save(output, format='PNG')
+            image_bytes = output.getvalue()
+
+        # Perform OCR on the cropped image
+        result = reader.readtext(image_bytes)
+        # Extract numbers from OCR result
+        filtered = ""
+        for detection in result:
+            text = detection[1]
+            parsed_text = ''.join([char for char in text if char.isdigit() or char.lower() in ('k', 'm')])
+            filtered += parsed_text
 
         if filtered == "":
-            print("Error parsing number from image. Got <"+parsed_text+">")
+            print("Error parsing number from image. Got <"+result+">")
             return None
 
         return filtered
@@ -166,8 +182,8 @@ def create_new_image(number):
     background_image.show()  # Replace "output_image.jpg" with your desired output file path
 
 
-def save(target_image):
-    with open("temp.svg", 'w') as file:
+def save(target_image, name):
+    with open(name+"_temp.svg", 'w') as file:
         file.write(target_image)
 
 
@@ -187,7 +203,7 @@ def update_add_badges():
 
                 new_svg = replace_svg_text(badge.background(), badge.old_text, badge.new_text.format(parsed_number))
 
-                # save(new_svg)
+                #save(new_svg, badge.name)
 
                 push_to_git(new_svg, badge.target())
 
