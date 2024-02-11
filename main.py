@@ -84,7 +84,7 @@ def parse_number_from_image(image, crop_box):
         cropped_image = image.crop(crop_box)
         # cropped_image.show()
         # Perform OCR on the cropped image
-        parsed_text = pytesseract.image_to_string(cropped_image)
+        parsed_text = pytesseract.image_to_string(cropped_image, config='--psm 1')
         # Remove non-numeric characters and convert to integer
 
         filtered = ''.join([char for char in parsed_text if char.isdigit() or char.lower() in ('k', 'm')])
@@ -174,6 +174,13 @@ def save(target_image):
 def update_add_badges():
     print("Hello from new thread")
 
+    # List of available languages
+    print(pytesseract.get_languages(config=''))
+    tesseract_path = pytesseract.pytesseract.tesseract_cmd
+    if os.path.exists(tesseract_path):
+        print("Tesseract executable found at:", tesseract_path)
+    else:
+        print("Tesseract executable not found or path is incorrect:", tesseract_path)
     for badge in badges:
         # Download and read the Discord badge image
         discord_badge_image = download_and_read_image(badge.url, badge.name)
