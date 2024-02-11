@@ -23,6 +23,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install tesseract-ocr -y
+        pip install pytesseract
     - name: Run OCR
       run: |
         python -c "import pytesseract; print('Tesseract executable path:', pytesseract.pytesseract.tesseract_cmd)"
@@ -38,7 +39,4 @@ jobs:
     - name: Run Python Script
       env:
         GITHUB_TOKEN: ${{ secrets.TOK }}
-      run: python main.py > output.txt 2>&1
-
-    - name: Print Output
-      run: cat output.txt
+      run: python main.py
