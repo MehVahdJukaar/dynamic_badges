@@ -57,7 +57,7 @@ def download_and_read_image(url, name):
         # Read the image data
         image_data = response.content
 
-        push_to_git(image_data, name+"_received.svg")
+        # push_to_git(image_data, name+"_received.svg")
 
         # Convert SVG to PNG using Wand
         # Convert SVG to PNG using Wand
