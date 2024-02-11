@@ -33,4 +33,6 @@ jobs:
         echo "/usr/bin/tesseract" >> $GITHUB_PATH
 
     - name: Run Python Script
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: python main.py
