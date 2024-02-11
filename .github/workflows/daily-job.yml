@@ -2,9 +2,21 @@ name: Run Main Script Every 2 Hours
 
 on:
   schedule:
-    - cron: '0 */1 * * *' # Run every 2 hours
+    - cron: '0 */1 * * *' # Run every 1 hours
+
+  workflow_dispatch:
+
+
+
 
 jobs:
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "Hi from github actions!"
+
   run-main-script:
     runs-on: ubuntu-latest
 
