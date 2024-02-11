@@ -2,4 +2,4 @@ pytesseract
 requests
 Pillow
 Wand
-github
+pygithub
