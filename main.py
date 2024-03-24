@@ -44,7 +44,7 @@ badges = [
     ),
     Badge(
         "https://img.shields.io/youtube/channel/subscribers/UCOaLLgwzOdbH6rCI7izCptw?label=&color=2d2d2d&labelColor=dddddd&style=for-the-badge&logo=Youtube&message=Twitter&logoColor=ff0000",
-        "youtube", (140, 0, 310, 120), "Subscribers 1000", "{} Subscribers"
+        "youtube", (140, 0, 400, 120), "Subscribers 1k", "{} Subscribers"
     )
 ]
 
@@ -91,7 +91,7 @@ def parse_number_from_image(image, crop_box):
         parsed_text = pytesseract.image_to_string(cropped_image, config='--psm 6 -c tessedit_char_whitelist=0123456789.mk', lang='eng')
         # Remove non-numeric characters and convert to integer
 
-        filtered = ''.join([char for char in parsed_text if char.isdigit() or char.lower() in ('k', 'm')])
+        filtered = ''.join([char for char in parsed_text if char.isdigit() or char.lower() in ('k', 'm', '.')])
 
         if filtered == "":
             print("Error parsing number from image. Got <"+parsed_text+">")
@@ -176,16 +176,7 @@ def save(target_image):
 
 
 def update_add_badges():
-    print("Hello from new thread")
-
-    # List of available languages
-    print(pytesseract.get_languages(config=''))
-    tesseract_executable = shutil.which("tesseract")
-
-    if tesseract_executable is not None:
-        print("Tesseract executable found at:", tesseract_executable)
-    else:
-        print("Tesseract executable not found or not in PATH.")
+    #print("Hello from new thread")
 
     for badge in badges:
         # Download and read the Discord badge image
@@ -209,7 +200,7 @@ def update_add_badges():
         else:
             print("Failed to download/read the image.")
 
-    print("New thread over and out o7")
+    print("Over and out o7")
 
 
 if __name__ == "__main__":
@@ -217,10 +208,12 @@ if __name__ == "__main__":
   while True:
       interval_hours = 1
       # Run the function
-      threading.Thread(target=update_add_badges).start()
+      #threading.Thread(target=update_add_badges).start()
       # Wait for the specified interval
+
+      update_add_badges()
 
       break
 
-      print("Sleeping")
-      time.sleep(interval_hours * 3600)
+      #print("Sleeping")
+      #time.sleep(interval_hours * 3600)
